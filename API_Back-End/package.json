@@ -1,18 +1,16 @@
 {
   "name": "api_back-end",
   "version": "1.0.0",
-  "description": "Projeto de uma Web API.",
+  "description": "Web API com conexão ao Banco de Dados",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "devpovoa",
+  "author": "DevPovoa",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.21.2",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "express": "^4.21.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

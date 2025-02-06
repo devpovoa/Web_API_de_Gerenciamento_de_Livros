@@ -11,10 +11,42 @@ npm install express
 
 
 
-## Nodemon
+### Nodemon
 
 ```js
 npm install -g nodemon
 npm install --save-dev nodemon
 ```
 
+
+
+### Rotas POST e Formato JSON
+
+**JSON :arrow_right: (JavaScript Object Notation)**
+
+
+
+#### Tipos de métodos usado
+
+```js
+fetch();
+```
+
+#### Pacote <code>axios</code>
+
+
+
+### Verbos HTTP na metodologia RESTful
+
+```http
+GET
+POST
+PUT
+DELETE
+```
+
+
+
+### Middlewares
+
+**Um middlewares é uma espécie de mediador entre duas partes, algo que fica no meio (middle).**
