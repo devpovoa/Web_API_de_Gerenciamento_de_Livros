@@ -110,3 +110,8 @@ npx knex seed:make 001_add_livros
 npx knex seed:run
 ```
 
+
+
+### Async e await
+
+**Node é uma linguagem assíncrona, por essa razão faz uso destas palavras reservadas.**

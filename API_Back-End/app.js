@@ -1,35 +1,21 @@
 "use strict";
 
 const express = require('express');
+const cors = require('cors');
+
 const app = express();
 const PORT = 3001;
-
-
-const log = (req, res, next) => {
- console.log(`${'.'.repeat(20)}Acessado em ${new Date()}`);
- next();
-};
-// app.use(log);
-
-app.get('/transfere', log, (req, res) => {
- res.send("OK! Valor transferido com sucesso...");
-});
-
-app.get('/', (req, res) => {
- res.send("Olá... Bem-vindo!");
-});
-
-app.get('/cap12', (req, res) => {
- res.send('<h2>Caítulo 12: Introdução ao Express</h2>')
-});
+const livros = require('./routes/livrosRoutes');
 
 app.use(express.json());
-app.post('/filmes', (req, res) => {
- const { titulo, genero } = req.body;
+app.use(cors());
+app.use('/livros', livros);
 
- res.send(`Filmes: ${titulo} - Gênero: ${genero}, recebido...`);
+app.use((err, req, res, next) => {
+ console.error(err.stack);
+ res.status(500).json({ msg: "Erro interno no servidor" });
 });
 
 app.listen(PORT, () => {
- console.log(`Servidor rodando em http://localhost:${PORT}.`);
+ console.log(`🚀 Servidor rodando em: http://localhost:${PORT}`);
 });
