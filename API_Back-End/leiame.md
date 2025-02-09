@@ -83,7 +83,7 @@ npx knex migrate:make create_livros
 npx knex migrate:latest
 ```
 
-### 🌱 Seeds: Inserindo Dados Iniciais 
+### 🌱 Seeds: Inserindo Dados Iniciais
 
 **:warning: Caso queira testar a aplicação.**
 
@@ -310,6 +310,66 @@ module.exports = setupSwagger;
           "200": { "description": "Livro atualizado com sucesso" },
           "400": { "description": "Erro nos dados enviados" },
           "404": { "description": "Livro não encontrado" }
+        }
+      }
+    },
+    "/livros/filtro/{palavra}": {
+      "get": {
+        "summary": "Filtra livros pelo título ou autor",
+        "tags": ["Livros"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "palavra",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Palavra-chave para busca no título ou autor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de livros filtrada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "titulo": { "type": "string" },
+                      "autor": { "type": "string" },
+                      "ano": { "type": "integer" },
+                      "preco": { "type": "number" },
+                      "foto": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Campo vazio ou palavra inválida." },
+          "500": { "description": "Erro interno no servidor." }
+        }
+      }
+    },
+    "/livros/dados/resumo": {
+      "get": {
+        "summary": "Obtém um resumo dos livros",
+        "tags": ["Dados"],
+        "responses": {
+          "200": { "description": "Resumo retornado com sucesso" },
+          "404": { "description": "Nenhum dado encontrado" }
+        }
+      }
+    },
+    "/livros/dados/grafico": {
+      "get": {
+        "summary": "Obtém dados para gráfico",
+        "tags": ["Dados"],
+        "responses": {
+          "200": { "description": "Dados retornados com sucesso" },
+          "404": { "description": "Nenhum dado encontrado" }
         }
       }
     }

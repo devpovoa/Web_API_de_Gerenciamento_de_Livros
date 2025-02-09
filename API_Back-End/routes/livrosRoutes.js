@@ -4,7 +4,6 @@ const express = require('express');
 const router = express.Router();
 const dbKnex = require('../data/db_config');
 
-
 router.get('/', async (req, res) => {
  try {
   const livros = await dbKnex('livros').select().where('ativo', true).orderBy('id', 'desc');
@@ -73,7 +72,6 @@ router.get('/dados/grafico', async (req, res) => {
  }
 });
 
-
 router.post('/', async (req, res) => {
  const { titulo, autor, ano, preco, foto } = req.body;
 
@@ -90,7 +88,6 @@ router.post('/', async (req, res) => {
   res.status(500).json({ msg: "Erro interno no servidor" });
  };
 });
-
 
 router.put('/:id', async (req, res) => {
  const { id } = req.params;
@@ -167,8 +164,6 @@ router.patch('/:id/status', async (req, res) => {
   res.status(500).json({ msg: "Erro interno no servidor" });
  }
 });
-
-
 
 router.delete('/:id', async (req, res) => {
  const { id } = req.params;
