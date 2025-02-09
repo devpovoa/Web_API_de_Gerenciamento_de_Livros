@@ -3,9 +3,8 @@
 require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
-const swaggerUi = require("swagger-ui-express");
 const livros = require("./routes/livrosRoutes");
-const swaggerDocs = require("./swagger");
+const setupSwagger = require("./swagger");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cors());
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+setupSwagger(app);
 
 app.use("/livros", livros);
 

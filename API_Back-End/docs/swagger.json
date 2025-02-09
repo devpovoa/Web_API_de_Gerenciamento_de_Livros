@@ -1,0 +1,174 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Livros",
+    "version": "1.0.0",
+    "description": "Documentação da API para gerenciamento de livros"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001",
+      "description": "Servidor local"
+    }
+  ],
+  "paths": {
+    "/livros": {
+      "get": {
+        "summary": "Lista todos os livros",
+        "tags": ["Livros"],
+        "responses": {
+          "200": {
+            "description": "Lista de livros retornada com sucesso"
+          }
+        }
+      },
+      "post": {
+        "summary": "Adiciona um novo livro",
+        "tags": ["Livros"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["titulo", "autor", "ano", "preco", "foto"],
+                "properties": {
+                  "titulo": { "type": "string" },
+                  "autor": { "type": "string" },
+                  "ano": { "type": "integer" },
+                  "preco": { "type": "number" },
+                  "foto": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Livro criado com sucesso" },
+          "400": { "description": "Erro nos dados enviados" }
+        }
+      }
+    },
+    "/livros/{id}": {
+      "put": {
+        "summary": "Atualiza um livro (todos os campos)",
+        "tags": ["Livros"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID do livro a ser atualizado"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "titulo": { "type": "string" },
+                  "autor": { "type": "string" },
+                  "ano": { "type": "integer" },
+                  "preco": { "type": "number" },
+                  "foto": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Livro atualizado com sucesso" },
+          "404": { "description": "Livro não encontrado" }
+        }
+      },
+      "patch": {
+        "summary": "Atualiza parcialmente um livro (apenas os campos informados)",
+        "tags": ["Livros"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID do livro a ser atualizado"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "titulo": { "type": "string" },
+                  "autor": { "type": "string" },
+                  "ano": { "type": "integer" },
+                  "preco": { "type": "number" },
+                  "foto": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Livro atualizado parcialmente com sucesso" },
+          "400": { "description": "Nenhum campo enviado para atualização" },
+          "404": { "description": "Livro não encontrado" }
+        }
+      },
+      "delete": {
+        "summary": "Exclui um livro",
+        "tags": ["Livros"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID do livro a ser excluído"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Livro deletado com sucesso" },
+          "404": { "description": "Livro não encontrado" }
+        }
+      }
+    },
+    "/livros/{id}/status": {
+      "patch": {
+        "summary": "Atualiza o status de um livro (ativo ou inativo)",
+        "tags": ["Livros"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID do livro a ser atualizado"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ativo": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Livro atualizado com sucesso" },
+          "400": { "description": "Erro nos dados enviados" },
+          "404": { "description": "Livro não encontrado" }
+        }
+      }
+    }
+  }
+}

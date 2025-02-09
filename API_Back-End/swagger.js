@@ -1,29 +1,15 @@
 "use strict";
 
-require('dotenv').config();
+const swaggerUi = require("swagger-ui-express");
+const fs = require("fs");
 const path = require("path");
-const swaggerJsDoc = require("swagger-jsdoc");
 
-const PORT = process.env.PORT || 3001;
+const swaggerDocument = JSON.parse(
+ fs.readFileSync(path.join(__dirname, "docs", "swagger.json"), "utf8")
+);
 
-const swaggerOptions = {
- definition: {
-  openapi: "3.0.0",
-  info: {
-   title: "API de Livros",
-   version: "1.0.0",
-   description: "Uma API para gerenciar livros",
-  },
-  servers: [
-   {
-    url: `http://localhost:${PORT}`,
-    description: "Servidor local",
-   },
-  ],
- },
- apis: [path.resolve(__dirname, "./routes/livrosRoutes.js")],
-};
+function setupSwagger(app) {
+ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-
-module.exports = swaggerDocs;
+module.exports = setupSwagger;
