@@ -18,6 +18,7 @@ Esta API permite o gerenciamento de um acervo de livros, possibilitando a criaç
 - Knex.js
 - Oracle Database
 - Swagger (para documentação)
+- Docker
 
 ## 📥 Instalação e Configuração
 
