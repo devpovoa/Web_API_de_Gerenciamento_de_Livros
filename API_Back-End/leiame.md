@@ -83,7 +83,9 @@ npx knex migrate:make create_livros
 npx knex migrate:latest
 ```
 
-### 🌱 Seeds: Inserindo Dados Iniciais
+### 🌱 Seeds: Inserindo Dados Iniciais 
+
+**:warning: Caso queira testar a aplicação.**
 
 ```bash
 npx knex seed:make 001_add_livros
@@ -115,39 +117,204 @@ npm install swagger-ui-express swagger-jsdoc
 
 ### 🛠 Configuração do Swagger
 
-Crie um arquivo `swagger.js` e adicione:
+Crie um arquivo `swagger.js` , uma pastar com o arquivo `docs/swagger.json` e adicione:
 
 ```js
 "use strict";
 
-require('dotenv').config();
+const swaggerUi = require("swagger-ui-express");
+const fs = require("fs");
 const path = require("path");
-const swaggerJsDoc = require("swagger-jsdoc");
 
-const PORT = process.env.PORT || 3001;
+const swaggerDocument = JSON.parse(
+ fs.readFileSync(path.join(__dirname, "docs", "swagger.json"), "utf8")
+);
 
-const swaggerOptions = {
- definition: {
-  openapi: "3.0.0",
-  info: {
-   title: "API de Livros",
-   version: "1.0.0",
-   description: "Uma API para gerenciar livros",
+function setupSwagger(app) {
+ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
+
+module.exports = setupSwagger;
+
+```
+
+---
+
+```json
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Livros",
+    "version": "1.0.0",
+    "description": "Documentação da API para gerenciamento de livros"
   },
-  servers: [
-   {
-    url: `http://localhost:${PORT}`,
-    description: "Servidor local",
-   },
+  "servers": [
+    {
+      "url": "http://localhost:3001",
+      "description": "Servidor local"
+    }
   ],
- },
- apis: [path.resolve(__dirname, "./routes/livrosRoutes.js")],
-};
-
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-
-module.exports = swaggerDocs;
-
+  "paths": {
+    "/livros": {
+      "get": {
+        "summary": "Lista todos os livros",
+        "tags": ["Livros"],
+        "responses": {
+          "200": {
+            "description": "Lista de livros retornada com sucesso"
+          }
+        }
+      },
+      "post": {
+        "summary": "Adiciona um novo livro",
+        "tags": ["Livros"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["titulo", "autor", "ano", "preco", "foto"],
+                "properties": {
+                  "titulo": { "type": "string" },
+                  "autor": { "type": "string" },
+                  "ano": { "type": "integer" },
+                  "preco": { "type": "number" },
+                  "foto": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Livro criado com sucesso" },
+          "400": { "description": "Erro nos dados enviados" }
+        }
+      }
+    },
+    "/livros/{id}": {
+      "put": {
+        "summary": "Atualiza um livro (todos os campos)",
+        "tags": ["Livros"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID do livro a ser atualizado"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "titulo": { "type": "string" },
+                  "autor": { "type": "string" },
+                  "ano": { "type": "integer" },
+                  "preco": { "type": "number" },
+                  "foto": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Livro atualizado com sucesso" },
+          "404": { "description": "Livro não encontrado" }
+        }
+      },
+      "patch": {
+        "summary": "Atualiza parcialmente um livro (apenas os campos informados)",
+        "tags": ["Livros"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID do livro a ser atualizado"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "titulo": { "type": "string" },
+                  "autor": { "type": "string" },
+                  "ano": { "type": "integer" },
+                  "preco": { "type": "number" },
+                  "foto": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Livro atualizado parcialmente com sucesso" },
+          "400": { "description": "Nenhum campo enviado para atualização" },
+          "404": { "description": "Livro não encontrado" }
+        }
+      },
+      "delete": {
+        "summary": "Exclui um livro",
+        "tags": ["Livros"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID do livro a ser excluído"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Livro deletado com sucesso" },
+          "404": { "description": "Livro não encontrado" }
+        }
+      }
+    },
+    "/livros/{id}/status": {
+      "patch": {
+        "summary": "Atualiza o status de um livro (ativo ou inativo)",
+        "tags": ["Livros"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID do livro a ser atualizado"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ativo": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Livro atualizado com sucesso" },
+          "400": { "description": "Erro nos dados enviados" },
+          "404": { "description": "Livro não encontrado" }
+        }
+      }
+    }
+  }
+}
 ```
 
 ### 🏗 Integrando ao Servidor
@@ -160,9 +327,8 @@ No seu arquivo principal (`server.js` ou `index.js`), importe e use a configura�
 require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
-const swaggerUi = require("swagger-ui-express");
 const livros = require("./routes/livrosRoutes");
-const swaggerDocs = require("./swagger");
+const setupSwagger = require("./swagger");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -170,7 +336,7 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cors());
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+setupSwagger(app);
 
 app.use("/livros", livros);
 
@@ -188,5 +354,16 @@ app.listen(PORT, () => {
 Agora, ao rodar seu servidor, você pode acessar a documentação em `http://localhost:3000/api-docs`.
 
 ---
+
+### 🚀 API em Docker
+
+Esta API foi desenvolvida e configurada para rodar dentro de um container Docker.
+
+### 📌 Requisitos
+
+Antes de começar, certifique-se de ter instalado:
+
+- Docker
+- (Opcional) Docker Compose para gerenciar múltiplos containers
 
 🎯 **Agora você está pronto para construir APIs poderosas com Express, Node.js e Swagger!** 🚀

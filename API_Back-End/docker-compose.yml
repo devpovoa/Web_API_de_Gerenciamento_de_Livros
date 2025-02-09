@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "3001:3001"
+    depends_on:
+      - oracle-db
+    environment:
+      - ORACLE_USER=SYSTEM
+      - ORACLE_PASSWORD=86900821
+      - ORACLE_HOST=oracle-db
+      - ORACLE_DB=XE
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  oracle-db:
+    image: container-registry.oracle.com/database/express:latest
+    restart: always
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    environment:
+      - ORACLE_PWD=86900821
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+
+volumes:
+  oracle-data:
