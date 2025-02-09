@@ -1,117 +1,108 @@
-# Back-end com Express
+# 📌 Back-end com Express
 
-**O Express é um framework para Node.js que fornece um conjunto de recursos para o desenvolvimento de aplicações web ou móveis.**
+O **Express** é um framework para **Node.js** que fornece um conjunto de recursos para o desenvolvimento de aplicações **web** ou **móveis**.
 
-### Comando necessário para iniciar o Projeto
+## 🚀 Iniciando o Projeto
 
-```js
+Para começar, utilize os seguintes comandos:
+
+```bash
 npm init -y
 npm install express
 ```
 
+## 🔄 Configurando o Nodemon
 
+O **Nodemon** é uma ferramenta que reinicia automaticamente o servidor ao detectar mudanças no código.
 
-### Nodemon
-
-```js
+```bash
 npm install -g nodemon
 npm install --save-dev nodemon
 ```
 
+## 📡 Trabalhando com JSON e Métodos HTTP
 
+O **JSON** (_JavaScript Object Notation_) é um formato leve para troca de dados.
 
-### Rotas POST e Formato JSON
-
-**JSON :arrow_right: (JavaScript Object Notation)**
-
-
-
-#### Tipos de métodos usado
-
-```js
-fetch();
-```
-
-#### Pacote <code>axios</code>
-
-
-
-### Verbos HTTP na metodologia RESTful
+### Métodos HTTP Utilizados
 
 ```http
-GET
-POST
-PUT
-DELETE
+GET     # Recupera informações
+POST    # Envia dados
+PUT     # Atualiza dados
+DELETE  # Remove dados
 ```
 
-
-
-### Middlewares
-
-**Um middlewares é uma espécie de mediador entre duas partes, algo que fica no meio (middle).**
-
-
-
-### Knex e OracleBD
+### Utilizando `fetch()`
 
 ```js
+fetch(url, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(dados)
+});
+```
+
+### 📦 Pacote `axios`
+
+O `axios` é uma alternativa ao `fetch` para requisições HTTP.
+
+```bash
+npm install axios
+```
+
+## 🛠 Middlewares
+
+Os **middlewares** atuam como intermediários entre a requisição e a resposta, permitindo modificar os dados ou executar verificações.
+
+Exemplo de middleware:
+
+```js
+app.use((req, res, next) => {
+  console.log("Middleware em execução");
+  next();
+});
+```
+
+## 🗄 Banco de Dados com Knex e OracleDB
+
+Instale os pacotes necessários:
+
+```bash
 npm install knex --save
 npm install oracledb
 npx knex init
 ```
 
+### 📌 Criando Tabela `Livros` com Knex
 
-
-### Criação da tabela Livros com o Knex
-
-```js
+```bash
 npx knex migrate:make create_livros
 npx knex migrate:latest
 ```
 
+### 🌱 Seeds: Inserindo Dados Iniciais
 
-
-### Comando SQL para criação manual
-
-```sql
-CREATE TABLE "SYSTEM"."livros" 
-   (	"id" NUMBER(*,0) NOT NULL ENABLE, 
-	"titulo" VARCHAR2(80 BYTE) NOT NULL ENABLE, 
-	"autor" VARCHAR2(60 BYTE) NOT NULL ENABLE, 
-	"ano" NUMBER(4,0) NOT NULL ENABLE, 
-	"preco" NUMBER(9,2) NOT NULL ENABLE, 
-	"foto" VARCHAR2(100 BYTE) NOT NULL ENABLE, 
-	 PRIMARY KEY ("id")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "SYSTEM"  ENABLE
-   ) PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "SYSTEM" ;
-
-  CREATE OR REPLACE NONEDITIONABLE TRIGGER "SYSTEM"."livros_autoinc_trg" BEFORE INSERT on "livros"  for each row  declare  checking number := 1;  begin    if (:new."id" is null) then      while checking >= 1 loop        select "livros_seq".nextval into :new."id" from dual;        select count("id") into checking from "livros"        where "id" = :new."id";      end loop;    end if;  end;
-/
-ALTER TRIGGER "SYSTEM"."livros_autoinc_trg" ENABLE;
-
-```
-
-
-
-### Seeds: Semeando dados iniciais
-
-```js
+```bash
 npx knex seed:make 001_add_livros
 npx knex seed:run
 ```
 
+## ⏳ Trabalhando com `async` e `await`
 
+O **Node.js** é assíncrono por natureza. Para um código mais legível, usamos `async` e `await`.
 
-### Async e await
+Exemplo:
 
-**Node é uma linguagem assíncrona, por essa razão faz uso destas palavras reservadas.**
+```js
+async function getLivros() {
+  const livros = await knex("livros").select("*");
+  return livros;
+}
+```
+
+---
+
+🎯 **Agora você está pronto para construir APIs poderosas com Express e Node.js!** 🚀
