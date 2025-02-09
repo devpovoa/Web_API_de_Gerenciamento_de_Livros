@@ -103,6 +103,90 @@ async function getLivros() {
 }
 ```
 
+## 📜 Documentação com Swagger
+
+O **Swagger** é uma ferramenta que facilita a documentação e o teste de APIs.
+
+### 📥 Instalando o Swagger
+
+```bash
+npm install swagger-ui-express swagger-jsdoc
+```
+
+### 🛠 Configuração do Swagger
+
+Crie um arquivo `swagger.js` e adicione:
+
+```js
+"use strict";
+
+require('dotenv').config();
+const path = require("path");
+const swaggerJsDoc = require("swagger-jsdoc");
+
+const PORT = process.env.PORT || 3001;
+
+const swaggerOptions = {
+ definition: {
+  openapi: "3.0.0",
+  info: {
+   title: "API de Livros",
+   version: "1.0.0",
+   description: "Uma API para gerenciar livros",
+  },
+  servers: [
+   {
+    url: `http://localhost:${PORT}`,
+    description: "Servidor local",
+   },
+  ],
+ },
+ apis: [path.resolve(__dirname, "./routes/livrosRoutes.js")],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
+module.exports = swaggerDocs;
+
+```
+
+### 🏗 Integrando ao Servidor
+
+No seu arquivo principal (`server.js` ou `index.js`), importe e use a configuração:
+
+```js
+"use strict";
+
+require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const livros = require("./routes/livrosRoutes");
+const swaggerDocs = require("./swagger");
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+app.use(express.json());
+app.use(cors());
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+app.use("/livros", livros);
+
+app.use((err, req, res, next) => {
+ console.error("Erro capturado", err.stack);
+ res.status(500).json({ msg: "Erro interno no servidor", err: err.message });
+});
+
+app.listen(PORT, () => {
+ console.log(`🚀 Servidor rodando em: http://localhost:${PORT}`);
+ console.log(`📄 Documentação Swagger disponível em: http://localhost:${PORT}/api-docs`);
+});
+```
+
+Agora, ao rodar seu servidor, você pode acessar a documentação em `http://localhost:3000/api-docs`.
+
 ---
 
-🎯 **Agora você está pronto para construir APIs poderosas com Express e Node.js!** 🚀
+🎯 **Agora você está pronto para construir APIs poderosas com Express, Node.js e Swagger!** 🚀
