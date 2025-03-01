@@ -229,6 +229,47 @@
           "404": { "description": "Nenhum dado encontrado" }
         }
       }
+    },
+    "/livros/dados/registros/{ano}": {
+      "get": {
+        "summary": "Obtém os registros de livros para um ano específico",
+        "tags": ["Dados"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ano",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "Ano para o qual os registros de livros serão retornados"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registros de livros para o ano retornados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "titulo": { "type": "string" },
+                      "autor": { "type": "string" },
+                      "ano": { "type": "integer" },
+                      "preco": { "type": "number" },
+                      "foto": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nenhum dado encontrado para o ano solicitado"
+          }
+        }
+      }
     }
   }
 }
